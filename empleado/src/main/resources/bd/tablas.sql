@@ -1,0 +1,1 @@
+create table if not exists profesion (profesion_id integer not null, profesion_nombre varchar(255), primary key (profesion_id));
