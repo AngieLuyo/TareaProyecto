@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: postgres1
+    container_name: postgres
     image: postgres
     environment:
       POSTGRES_USER: nttdata
@@ -14,7 +14,7 @@ services:
       - postgres
     restart: unless-stopped
   pgadmin:
-    container_name: pgadmin1
+    container_name: pgadmin
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
@@ -29,93 +29,125 @@ services:
     restart: unless-stopped
   zipkin:
     image: openzipkin/zipkin
-    container_name: zipkin1
+    container_name: zipkin
     ports:
       - "9411:9411"
     networks:
       - spring
   rabbitmq:
     image: rabbitmq:3.10.5-management-alpine
-    container_name: rabbitmq1
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
     networks:
       - spring
-  #  eureka-server:
-  #    image: angieluyo/eureka-server:latest
-  #    container_name: eureka-server
-  #    ports:
-  #      - "8761:8761"
-  #    environment:
-  #      - SPRING_PROFILES_ACTIVE=docker
-  #    networks:
-  #      - spring
-  #    depends_on:
-  #      - zipkin
-  #  apigateway:
-  #    image: angieluyo/apigateway:latest
-  #    container_name: apigateway
-  #    ports:
-  #      - "8083:8083"
-  #    environment:
-  #      - SPRING_PROFILES_ACTIVE=docker
-  #    networks:
-  #      - spring
-  #    depends_on:
-  #      - zipkin
-  #      - eureka-server
-  empleado:
-    image: angieluyo/empleado:latest
-    container_name: empleado1
+  eureka-server:
+    image: angieluyo/eureka-server:latest
+    container_name: eureka-server
     ports:
-      - "8080:8080"
+      - "8761:8761"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
     networks:
       - spring
-      - postgres
     depends_on:
       - zipkin
-      - postgres
-      - rabbitmq
-      - eureka-server
-  validarempleado:
-    image: angieluyo/validarempleado:latest
-    container_name: validarempleado1
-    ports:
-      - "8088:8088"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - spring
-      - postgres
-    depends_on:
-      - zipkin
-      - postgres
-      - eureka-server
-  notificacion:
-    image: angieluyo/notificacion:latest
-    container_name: notificacion1
-    ports:
-      - "8092:8092"
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    networks:
-      - spring
-      - postgres
-    depends_on:
-      - zipkin
-      - postgres
-      - rabbitmq
-      - eureka-server
-
-networks:
-  postgres:
-    driver: bridge
-  spring:
-    driver: bridge
-
-volumes:
-  postgres:
-  pgadmin:
+      - config-server
+    apigateway:
+      image: angieluyo/apigateway:latest
+      container_name: apigateway
+      ports:
+        - "8083:8083"
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+      networks:
+        - spring
+      depends_on:
+        - zipkin
+        - eureka-server
+        - config-server
+    empleado:
+      image: angieluyo/empleado:latest
+      container_name: empleado
+      ports:
+        - "8080:8080"
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+      networks:
+        - spring
+        - postgres
+      depends_on:
+        - zipkin
+        - postgres
+        - rabbitmq
+        - config-server
+        - eureka-server
+        - apigateway
+    validarempleado:
+      image: angieluyo/validarempleado:latest
+      container_name: validarempleado
+      ports:
+        - "8081:8081"
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+      networks:
+        - spring
+        - postgres
+      depends_on:
+        - zipkin
+        - postgres
+        - config-server
+        - eureka-server
+        - apigateway
+    notificacion:
+      image: angieluyo/notificacion:latest
+      container_name: notificacion
+      ports:
+        - "8082:8082"
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+      networks:
+        - spring
+        - postgres
+      depends_on:
+        - zipkin
+        - postgres
+        - rabbitmq
+        - config-server
+        - eureka-server
+    autenticacion:
+      image: angieluyo/autenticacion:latest
+      container_name: autenticacion
+      ports:
+        - "8084:8084"
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+      networks:
+        - spring
+        - postgres
+      depends_on:
+        - zipkin
+        - postgres
+        - config-server
+        - eureka-server
+        - apigateway
+    config-server:
+      image: angieluyo/config-server:latest
+      container_name: config-server
+      ports:
+        - "8090:8090"
+      environment:
+        - SPRING_PROFILES_ACTIVE=docker
+      networks:
+        - spring
+  
+  networks:
+    postgres:
+      driver: bridge
+    spring:
+      driver: bridge
+  
+  volumes:
+    postgres:
+    pgadmin:

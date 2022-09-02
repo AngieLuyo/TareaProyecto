@@ -11,7 +11,9 @@
 		<module>notificacion</module>
 		<module>empleadofeign</module>
 		<module>empleadoqueues</module>
-	</modules>
+        <module>config-server</module>
+        <module>autenticacion</module>
+    </modules>
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
