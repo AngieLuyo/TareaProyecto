@@ -20,13 +20,8 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class EmpleadoServiceImpl implements IEmpleadoService {
-
     private final IEmpleadoDao empleadoDao;
     //private final RestTemplate restTemplate;
-
-
-   // private final EmpleadoCheckClient empleadoCheckClient;
-
     private final EmpleadoCheckClient empleadoCheckClient;
 
     private final RabbitMQMessageProducer rabbitMQMessageProducer;
