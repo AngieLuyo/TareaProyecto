@@ -7,7 +7,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 //@FeignClient("validarcliente")
 @FeignClient(
        name = "validarempleado",
-       url = "${empleadofeign.validarempleado.url}" )
+       url = "${empleadofeign.validarempleado.url}"
+)
 public interface EmpleadoCheckClient {
     @GetMapping(path = "api/v1/empleado-check/{empleadoId}")
     EmpleadoCheckResponse validarEmpleado(@PathVariable("empleadoId") Integer empleadoId);

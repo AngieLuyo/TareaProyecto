@@ -3,10 +3,8 @@ package pe.com.nttdata.empleado;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.PropertySources;
-import pe.com.nttdata.empleado.controller.EmpleadoController;
 
 @SpringBootApplication(
         scanBasePackages = {
