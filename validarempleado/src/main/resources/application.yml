@@ -3,7 +3,7 @@ spring:
     name: validarempleado
   config:
     import: "optional:configserver:"
-    cloud:
-      config:
-        enabled: true
-        uri: http://localhost:8090
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8090
